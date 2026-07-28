@@ -1,0 +1,524 @@
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@500;600;700&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@500;700&display=swap');
+.prf{--nav:#0E2A47;--nav2:#143a5f;--steel:#1c4a75;--amber:#F4B93E;--amber2:#e0a520;--paper:#F5F6F8;--card:#FFFFFF;--ink:#12212F;--mut:#5E6B78;--line:#E1E5EA;--g:#2E9E6B;--y:#E0A21E;--r:#D64545;--violet:#6C5CE7;font-family:'Inter',sans-serif;background:var(--paper);color:var(--ink);border-radius:16px;overflow:hidden;max-width:100%;}
+.prf *{box-sizing:border-box;}
+.prf-head{background:linear-gradient(180deg,var(--nav),var(--nav2));color:#fff;padding:22px 26px 16px;position:relative;}
+.prf-head::after{content:"";position:absolute;left:0;right:0;bottom:0;height:4px;background:repeating-linear-gradient(90deg,var(--amber) 0 30px,transparent 30px 54px);}
+.prf-badge{font-family:'JetBrains Mono',monospace;font-size:10.5px;letter-spacing:2.5px;color:var(--amber);text-transform:uppercase;}
+.prf-h1{font-family:'Barlow Condensed',sans-serif;font-weight:700;font-size:29px;letter-spacing:.5px;text-transform:uppercase;margin:5px 0 3px;line-height:1;}
+.prf-hsub{font-size:12.5px;color:#B9C6D4;}
+.prf-phasebar{display:flex;gap:0;margin-top:14px;border-radius:8px;overflow:hidden;border:1px solid rgba(255,255,255,.15);}
+.prf-ph{flex:1;padding:8px 10px;text-align:center;cursor:pointer;background:rgba(255,255,255,.05);transition:.15s;border-right:1px solid rgba(255,255,255,.1);}
+.prf-ph:last-child{border-right:none;}
+.prf-ph.on{background:var(--amber);color:#3a2c00;}
+.prf-ph .pn{font-family:'Barlow Condensed',sans-serif;font-weight:700;font-size:13px;text-transform:uppercase;letter-spacing:.4px;line-height:1;}
+.prf-ph .pd{font-size:9px;margin-top:3px;opacity:.85;}
+.prf-ph:not(.on) .pn{color:#fff;} .prf-ph:not(.on) .pd{color:#9DB0C2;}
+.prf-tabs{display:flex;gap:2px;background:var(--nav2);padding:6px 12px 0;overflow-x:auto;}
+.prf-tab{white-space:nowrap;padding:11px 13px;font-family:'Barlow Condensed',sans-serif;font-size:13.5px;font-weight:600;letter-spacing:.4px;text-transform:uppercase;color:#9DB0C2;cursor:pointer;border-radius:8px 8px 0 0;transition:.15s;}
+.prf-tab.active{background:var(--paper);color:var(--ink);}
+.prf-tab:not(.active):hover{color:#fff;}
+.prf-body{padding:18px 22px 24px;}
+.prf-panel{display:none;}.prf-panel.active{display:block;animation:fi .2s ease;}
+@keyframes fi{from{opacity:0;transform:translateY(4px);}to{opacity:1;transform:none;}}
+.prf-card{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:16px 18px;margin-bottom:14px;box-shadow:0 1px 2px rgba(14,42,71,.04);}
+.prf-card h3{font-family:'Barlow Condensed',sans-serif;font-size:17px;font-weight:700;letter-spacing:.4px;text-transform:uppercase;margin:0 0 4px;display:flex;align-items:center;gap:9px;flex-wrap:wrap;}
+.prf-card h3 .pin{font-family:'JetBrains Mono',monospace;font-size:9.5px;font-weight:700;background:var(--nav);color:#fff;padding:2px 7px;border-radius:5px;letter-spacing:.5px;}
+.prf-card .sub{font-size:12px;color:var(--mut);margin-bottom:12px;line-height:1.55;}
+.prf-stats{display:grid;grid-template-columns:repeat(5,1fr);gap:10px;margin-bottom:14px;}
+.prf-stat{background:var(--card);border:1px solid var(--line);border-radius:11px;padding:12px 14px;}
+.prf-stat .n{font-family:'Barlow Condensed',sans-serif;font-weight:700;font-size:23px;line-height:1;}
+.prf-stat .l{font-size:9.5px;color:var(--mut);text-transform:uppercase;letter-spacing:.5px;margin-top:5px;}
+.prf-stat.amber .n{color:var(--amber2);}.prf-stat.g .n{color:var(--g);}.prf-stat.r .n{color:var(--r);}.prf-stat.v .n{color:var(--violet);}
+.prf-btn{font-family:'Barlow Condensed',sans-serif;font-weight:700;font-size:14px;letter-spacing:.5px;text-transform:uppercase;background:var(--amber);color:#3a2c00;border:none;padding:11px 18px;border-radius:9px;cursor:pointer;transition:.15s;}
+.prf-btn:hover{background:var(--amber2);}
+.prf-btn.nav{background:var(--nav);color:#fff;}.prf-btn.nav:hover{background:var(--steel);}
+.prf-btn.ghost{background:transparent;border:1.5px solid var(--line);color:var(--ink);}
+.prf-btn.sm{padding:6px 11px;font-size:12px;}
+.chip{font-family:'JetBrains Mono',monospace;font-size:9px;font-weight:700;padding:2px 7px;border-radius:20px;white-space:nowrap;}
+.chip.crit{background:var(--r);color:#fff;}.chip.rev{background:var(--amber);color:#3a2c00;}.chip.new{background:#DCE9F5;color:#1c4a75;}.chip.nlm{background:var(--violet);color:#fff;}
+.prf-week{display:grid;grid-template-columns:repeat(7,1fr);gap:7px;}
+.prf-day{background:var(--paper);border:1px solid var(--line);border-radius:10px;padding:9px 8px;min-height:112px;}
+.prf-day.today{border-color:var(--amber);box-shadow:0 0 0 2px var(--amber);background:#FFFDF5;}
+.prf-day .dn{font-family:'Barlow Condensed',sans-serif;font-weight:700;font-size:13px;text-transform:uppercase;letter-spacing:.5px;color:var(--nav);}
+.prf-day .dh{font-family:'JetBrains Mono',monospace;font-size:9px;color:var(--mut);margin-bottom:6px;}
+.prf-slot{font-size:10px;background:#fff;border:1px solid var(--line);border-radius:6px;padding:4px 5px;margin-bottom:4px;line-height:1.35;}
+.prf-slot b{display:block;font-size:9px;text-transform:uppercase;letter-spacing:.4px;color:var(--mut);}
+.prf-slot.am{border-left:2px solid var(--violet);}.prf-slot.pm{border-left:2px solid var(--amber);}.prf-slot.wk{border-left:2px solid var(--g);}
+.prf-sess{background:linear-gradient(135deg,var(--nav),var(--steel));color:#fff;border-radius:11px;padding:14px 16px;margin-bottom:10px;}
+.prf-sess .top{display:flex;justify-content:space-between;align-items:center;gap:10px;}
+.prf-sess .nm{font-family:'Barlow Condensed',sans-serif;font-weight:700;font-size:19px;letter-spacing:.3px;}
+.prf-sess .why{font-size:11.5px;color:#C9D6E4;margin-top:3px;line-height:1.5;}
+.prf-sess .steps{margin-top:9px;display:flex;flex-direction:column;gap:5px;}
+.prf-step{font-size:11.5px;background:rgba(0,0,0,.18);padding:7px 9px;border-radius:7px;display:flex;gap:8px;align-items:flex-start;}
+.prf-step .k{font-family:'JetBrains Mono',monospace;font-weight:700;color:var(--amber);white-space:nowrap;}
+.prf-step.nlm .k{color:#C7BEFF;}
+.prf-bud{display:grid;grid-template-columns:1fr 60px 46px;gap:10px;align-items:center;padding:8px 0;border-bottom:1px solid var(--line);}
+.prf-bud:last-child{border-bottom:none;}
+.prf-bud-nm{font-size:12.5px;font-weight:600;display:flex;align-items:center;gap:6px;flex-wrap:wrap;}
+.blk{font-family:'JetBrains Mono',monospace;font-size:9px;font-weight:700;padding:1px 5px;border-radius:4px;}
+.b1{background:#DCE9F5;color:#1c4a75;}.b2{background:#DEF1E6;color:#1c7a4c;}.b3{background:#FBE2E2;color:#a83232;}
+.prf-bud-track{grid-column:1/2;height:7px;background:var(--line);border-radius:5px;overflow:hidden;margin-top:5px;position:relative;}
+.prf-bud-fill{height:100%;border-radius:5px;}
+.prf-bud-cap{position:absolute;top:-2px;bottom:-2px;width:2px;background:var(--nav);}
+.prf-bud-n{font-family:'JetBrains Mono',monospace;font-size:11px;text-align:right;color:var(--mut);}
+.prf-bud-tag{font-family:'JetBrains Mono',monospace;font-size:9px;font-weight:700;text-align:center;padding:2px 4px;border-radius:5px;}
+.tag-cut{background:#FBE2E2;color:#a83232;}.tag-core{background:#DEF1E6;color:#1c7a4c;}.tag-ok{background:#F0F2F5;color:#5E6B78;}
+.prf-note{font-size:12px;color:var(--mut);background:#FFF7E6;border-left:3px solid var(--amber);padding:9px 12px;border-radius:0 7px 7px 0;line-height:1.55;margin-top:10px;}
+.prf-note.warn{background:#FDECEC;border-color:var(--r);}.prf-note.nlm{background:#F1EFFE;border-color:var(--violet);}
+.prf-note b{color:var(--ink);}
+input.prf-in,select.prf-in{width:100%;background:var(--paper);border:1px solid var(--line);color:var(--ink);border-radius:8px;padding:9px 10px;font-family:'Inter',sans-serif;font-size:13px;}
+input.prf-in:focus,select.prf-in:focus{outline:2px solid var(--amber);border-color:var(--amber);}
+label.prf-lb{font-size:10.5px;color:var(--mut);text-transform:uppercase;letter-spacing:.5px;display:block;margin-bottom:4px;font-weight:600;}
+.prf-form3{display:grid;grid-template-columns:1.4fr 1fr 1fr;gap:9px;margin-bottom:10px;}
+.prf-qrow{display:grid;grid-template-columns:1fr 60px 60px 74px;gap:8px;align-items:center;padding:8px 0;border-bottom:1px solid var(--line);font-size:12.5px;}
+.prf-qrow.h{color:var(--mut);font-size:10px;text-transform:uppercase;letter-spacing:.5px;font-weight:600;}
+.mono{font-family:'JetBrains Mono',monospace;font-weight:700;}
+.prf-err{background:var(--paper);border:1px solid var(--line);border-left:3px solid var(--r);border-radius:0 9px 9px 0;padding:11px 13px;margin-bottom:9px;}
+.prf-err .et{font-size:13px;font-weight:600;}.prf-err .em{font-size:11.5px;color:var(--mut);margin-top:3px;line-height:1.5;}.prf-err .ed{font-family:'JetBrains Mono',monospace;font-size:10px;color:var(--mut);margin-top:5px;}
+.prf-empty{text-align:center;color:var(--mut);font-size:12.5px;padding:14px 0;}
+.prf-info p{font-size:13px;line-height:1.65;color:#33424f;margin:0 0 10px;}.prf-info p:last-child{margin-bottom:0;}.prf-info b{color:var(--ink);}
+.prf-m{display:flex;gap:12px;align-items:flex-start;padding:11px 0;border-bottom:1px solid var(--line);}.prf-m:last-child{border-bottom:none;}
+.prf-m .mi{font-family:'Barlow Condensed',sans-serif;font-weight:700;font-size:22px;color:var(--amber2);min-width:26px;line-height:1;}
+.prf-m .mt{font-size:13.5px;font-weight:700;margin-bottom:2px;}.prf-m .md{font-size:12px;color:var(--mut);line-height:1.55;}
+.prf-redo{display:flex;gap:9px;align-items:center;padding:9px 0;border-bottom:1px solid var(--line);font-size:12.5px;}
+.prf-redo:last-child{border-bottom:none;}
+.prf-redo .rt{font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--mut);white-space:nowrap;}
+.prf-phasecard{display:grid;grid-template-columns:1fr;gap:10px;}
+.prf-phase{border:1px solid var(--line);border-radius:11px;padding:14px 16px;position:relative;}
+.prf-phase.on{border-color:var(--amber);background:#FFFDF5;box-shadow:0 0 0 1px var(--amber);}
+.prf-phase .ph-h{display:flex;justify-content:space-between;align-items:baseline;gap:10px;}
+.prf-phase .ph-n{font-family:'Barlow Condensed',sans-serif;font-weight:700;font-size:18px;text-transform:uppercase;letter-spacing:.4px;}
+.prf-phase .ph-hrs{font-family:'JetBrains Mono',monospace;font-weight:700;font-size:15px;color:var(--amber2);}
+.prf-phase .ph-when{font-size:11px;color:var(--mut);margin:2px 0 8px;}
+.prf-phase .ph-goal{font-size:12.5px;line-height:1.6;color:#33424f;}
+.prf-phase .ph-mix{display:flex;gap:6px;margin-top:9px;flex-wrap:wrap;}
+.mixchip{font-family:'JetBrains Mono',monospace;font-size:9.5px;font-weight:700;padding:3px 8px;border-radius:6px;background:#EEF1F5;color:var(--nav);}
+/* TIMER */
+.prf-timer-display{text-align:center;padding:18px 0 14px;}
+.prf-timer-clock{font-family:'JetBrains Mono',monospace;font-weight:700;font-size:52px;color:var(--nav);line-height:1;letter-spacing:-1px;transition:color .2s;}
+.prf-timer-clock.running{color:var(--g);}
+.prf-timer-clock.paused{color:var(--amber2);}
+.prf-timer-label{font-size:11px;color:var(--mut);text-transform:uppercase;letter-spacing:.5px;margin-top:6px;}
+.prf-timer-controls{display:flex;gap:8px;justify-content:center;margin-top:14px;}
+.prf-timer-selects{display:grid;grid-template-columns:1fr 1fr;gap:9px;margin-bottom:14px;}
+.prf-timer-srow{display:grid;grid-template-columns:1fr .7fr .5fr 40px;gap:8px;align-items:center;padding:9px 0;border-bottom:1px solid var(--line);font-size:12.5px;}
+.prf-timer-srow.h{color:var(--mut);font-size:10px;text-transform:uppercase;letter-spacing:.5px;font-weight:600;padding:4px 0;}
+.prf-timer-srow .del{color:var(--r);cursor:pointer;font-size:11px;text-align:center;}
+.prf-timer-bar{height:6px;background:var(--line);border-radius:4px;margin-top:8px;overflow:hidden;}
+.prf-timer-bar-fill{height:100%;border-radius:4px;background:var(--g);transition:width .3s;}
+.prf-timer-today-total{display:flex;justify-content:space-between;align-items:baseline;margin-top:14px;padding-top:10px;border-top:1px solid var(--line);}
+.prf-timer-today-total .tl{font-family:'Barlow Condensed',sans-serif;font-weight:700;font-size:14px;text-transform:uppercase;letter-spacing:.4px;}
+.prf-timer-today-total .tv{font-family:'JetBrains Mono',monospace;font-weight:700;font-size:20px;color:var(--nav);}
+.prf-timer-manual{display:none;margin-top:10px;padding-top:10px;border-top:1px dashed var(--line);}
+.prf-timer-manual.open{display:block;}
+.prf-timer-manual-grid{display:grid;grid-template-columns:1fr 1fr .6fr;gap:9px;margin-bottom:10px;}
+@media(max-width:680px){.prf-stats{grid-template-columns:repeat(2,1fr);}.prf-timer-selects{grid-template-columns:1fr;}.prf-form3{grid-template-columns:1fr;}.prf-week{grid-template-columns:1fr;}.prf-day{min-height:auto;}.prf-qrow{grid-template-columns:1fr 42px 42px 54px;font-size:11px;}.prf-phasebar{flex-direction:column;}}
+</style>
+
+<div class="prf" id="prf">
+  <div class="prf-head">
+    <div class="prf-badge">RESOLVVI · PLANO DE APROVAÇÃO PRF</div>
+    <div class="prf-h1">Rota do Policial Rodoviário Federal</div>
+    <div class="prf-hsub">Plano em 3 fases até a prova · edital previsto para 2027 · curva de horas automática</div>
+    <div class="prf-phasebar" id="phaseBar"></div>
+  </div>
+  <div class="prf-tabs">
+    <div class="prf-tab active" data-t="hoje">Hoje</div>
+    <div class="prf-tab" data-t="fases">Fases</div>
+    <div class="prf-tab" data-t="semana">Semana</div>
+    <div class="prf-tab" data-t="orc">Aulas</div>
+    <div class="prf-tab" data-t="timer">Cronômetro</div>
+    <div class="prf-tab" data-t="quest">Questões</div>
+    <div class="prf-tab" data-t="erros">Erros</div>
+    <div class="prf-tab" data-t="redsim">Redação & Simulados</div>
+    <div class="prf-tab" data-t="metodo">Método</div>
+    <div class="prf-tab" data-t="dados">Backup</div>
+  </div>
+  <div class="prf-body">
+
+    <div class="prf-panel active" id="p-hoje">
+      <div class="prf-stats" id="hojeStats"></div>
+      <div class="prf-card">
+        <h3>Bloco da noite <span class="pin" id="nightPin"></span></h3>
+        <div class="sub" id="nightSub"></div>
+        <div id="nightSess"></div>
+      </div>
+      <div class="prf-card">
+        <h3 style="color:var(--violet)">Revisão da manhã <span class="pin" style="background:var(--violet)">NotebookLM</span></h3>
+        <div class="sub">O que estudou por último + revisões vencidas, para amanhã cedo.</div>
+        <div id="morningSess"></div>
+      </div>
+    </div>
+
+    <div class="prf-panel" id="p-fases">
+      <div class="prf-card">
+        <h3>Seu plano até a prova <span class="pin">3 fases</span></h3>
+        <div class="sub">A carga de horas sobe em curva: leve e sustentável agora, intensa só quando faz diferença. Clique numa fase para ativá-la manualmente, ou deixe no automático conforme o edital sair.</div>
+        <div class="prf-phasecard" id="phaseCards"></div>
+        <div class="prf-note">Enquanto o edital não sai (previsão 2027), você fica na <b>Fase 1</b>. Quando publicarem, mude para <b>Fase 2</b>. Nas ~8 semanas finais antes da prova, <b>Fase 3</b>. O "Hoje" e a "Semana" se ajustam sozinhos à fase ativa.</div>
+      </div>
+    </div>
+
+    <div class="prf-panel" id="p-semana">
+      <div class="prf-card">
+        <h3>Sua semana <span class="pin" id="weekHrsPin"></span></h3>
+        <div class="sub">Roxo = revisão da manhã · Âmbar = bloco da noite · Verde = fim de semana. Ajusta pela fase ativa.</div>
+        <div class="prf-week" id="weekGrid"></div>
+        <div class="prf-note nlm" id="weekNote"></div>
+      </div>
+    </div>
+
+    <div class="prf-panel" id="p-timer">
+      <div class="prf-card">
+        <h3>Sessão de estudo <span class="pin" id="timerPhasePin"></span></h3>
+        <div class="sub">Inicie o cronômetro, estude, e registre quando terminar. O tempo acumula por dia e por matéria.</div>
+        <div class="prf-timer-selects">
+          <div><label class="prf-lb">Matéria</label><select class="prf-in" id="tmSubj"></select></div>
+          <div><label class="prf-lb">Tipo</label><select class="prf-in" id="tmType"><option value="aula">Aula</option><option value="questoes">Questões</option><option value="revisao">Revisão</option><option value="simulado">Simulado</option><option value="redacao">Redação</option></select></div>
+        </div>
+        <div class="prf-timer-display">
+          <div class="prf-timer-clock" id="tmClock">00:00:00</div>
+          <div class="prf-timer-label" id="tmLabel">Pronto para iniciar</div>
+        </div>
+        <div class="prf-timer-controls">
+          <button class="prf-btn" id="tmStart">Iniciar</button>
+          <button class="prf-btn ghost" id="tmPause" style="display:none;">Pausar</button>
+          <button class="prf-btn nav" id="tmFinish" style="display:none;">Finalizar sessão</button>
+          <button class="prf-btn ghost" id="tmCancel" style="display:none;">Cancelar</button>
+        </div>
+      </div>
+      <div class="prf-card">
+        <h3>Sessões de hoje</h3>
+        <div class="prf-timer-srow h"><div>Matéria</div><div>Tipo</div><div>Duração</div><div></div></div>
+        <div id="tmTodayList"></div>
+        <div class="prf-timer-today-total"><span class="tl">Total de hoje</span><span class="tv" id="tmTodayTotal">0:00</span></div>
+        <div class="prf-timer-bar"><div class="prf-timer-bar-fill" id="tmBar"></div></div>
+        <div class="prf-timer-label" id="tmBarLabel" style="text-align:right;margin-top:4px;"></div>
+        <div style="margin-top:10px;text-align:right;"><a href="#" id="tmManualToggle" style="font-size:11px;color:var(--mut);">+ Adicionar sessão manual</a></div>
+        <div class="prf-timer-manual" id="tmManual">
+          <div class="prf-timer-manual-grid">
+            <div><label class="prf-lb">Matéria</label><select class="prf-in" id="tmMSubj"></select></div>
+            <div><label class="prf-lb">Tipo</label><select class="prf-in" id="tmMType"><option value="aula">Aula</option><option value="questoes">Questões</option><option value="revisao">Revisão</option><option value="simulado">Simulado</option><option value="redacao">Redação</option></select></div>
+            <div><label class="prf-lb">Minutos</label><input class="prf-in" id="tmMMins" type="number" min="1" placeholder="60"></div>
+          </div>
+          <button class="prf-btn sm" id="tmMAdd">Adicionar</button>
+        </div>
+      </div>
+      <div class="prf-card">
+        <h3>Últimos 7 dias</h3>
+        <div id="tmWeekSummary"></div>
+      </div>
+    </div>
+
+    <div class="prf-panel" id="p-orc">
+      <div class="prf-card">
+        <h3>Orçamento de aulas <span class="pin">1.099 no total</span></h3>
+        <div class="sub">Total de aulas por matéria; linha escura = teto sugerido. Onde estoura, corte a cauda e migre para questões.</div>
+        <div id="budList"></div>
+        <div class="prf-note warn"><b>Informática (279) + RL (202) = 481 aulas</b> para matérias de baixo peso no Bloco I. Assista o núcleo e resolva questões dos assuntos mais cobrados — não veja tudo.</div>
+      </div>
+    </div>
+
+    <div class="prf-panel" id="p-quest">
+      <div class="prf-card">
+        <h3>Registrar treino <span class="pin">Cebraspe C/E</span></h3>
+        <div class="sub">Item errado −1. O que conta é o <b>saldo líquido</b> e quantas ficaram em branco.</div>
+        <div class="prf-form3"><div><label class="prf-lb">Matéria</label><select class="prf-in" id="qSubj"></select></div><div><label class="prf-lb">Acertos</label><input class="prf-in" id="qHit" type="number" min="0"></div><div><label class="prf-lb">Erros</label><input class="prf-in" id="qMiss" type="number" min="0"></div></div>
+        <div class="prf-form3"><div><label class="prf-lb">Em branco</label><input class="prf-in" id="qBlank" type="number" min="0"></div><div style="grid-column:2/4;display:flex;align-items:flex-end;"><button class="prf-btn" id="qAdd" style="width:100%;">Registrar</button></div></div>
+        <div class="prf-note" id="qFb" style="display:none;"></div>
+      </div>
+      <div class="prf-card"><h3>Histórico de saldo líquido</h3><div class="prf-qrow h"><div>Data · Matéria</div><div>Acertos</div><div>Erros</div><div>Saldo</div></div><div id="qHist"></div></div>
+    </div>
+
+    <div class="prf-panel" id="p-erros">
+      <div class="prf-card">
+        <h3>Anotar erro <span class="pin">vira revisão +2d</span></h3>
+        <div class="sub">Assunto + pegadinha, não a questão inteira. Dica NotebookLM: cole a questão e peça explicação + 3 questões parecidas.</div>
+        <div class="prf-form3"><div><label class="prf-lb">Matéria</label><select class="prf-in" id="eSubj"></select></div><div style="grid-column:2/4;"><label class="prf-lb">Assunto</label><input class="prf-in" id="eTopic" placeholder="ex: extraterritorialidade"></div></div>
+        <div style="margin-bottom:10px;"><label class="prf-lb">Por que errei</label><input class="prf-in" id="eWhy" placeholder="ex: confundi condicional com bicondicional"></div>
+        <button class="prf-btn" id="eAdd">Salvar no caderno</button>
+      </div>
+      <div class="prf-card"><h3>Caderno de erros</h3><div id="errList"></div></div>
+    </div>
+
+    <div class="prf-panel" id="p-redsim">
+      <div class="prf-card prf-info">
+        <h3>Redação discursiva <span class="pin">20 pts · corte 10</span></h3>
+        <p>Fórmula do edital: <b>NPD = NC − 4 × (NE ÷ TL)</b>. Fuga ao tema zera. Frequência sobe por fase: quinzenal na Fase 1, semanal na 2 e na 3.</p>
+        <div class="prf-note nlm">NotebookLM: caderno com o Manual de Redação da Presidência + suas redações como fontes → peça feedback de tese, coesão e erros recorrentes.</div>
+        <div style="margin-top:12px;"><label class="prf-lb">Registrar redação</label><div class="prf-form3"><div><label class="prf-lb">Tema</label><input class="prf-in" id="rTheme" placeholder="ex: segurança viária"></div><div><label class="prf-lb">Nota 0–20</label><input class="prf-in" id="rScore" type="number" min="0" max="20"></div><div style="display:flex;align-items:flex-end;"><button class="prf-btn nav" id="rAdd" style="width:100%;">Registrar</button></div></div></div>
+        <div id="redList" style="margin-top:6px;"></div>
+      </div>
+      <div class="prf-card">
+        <h3>Simulados <span class="pin">120 itens</span></h3>
+        <div class="sub">Por bloco na Fase 1; completo mensal na 2; completo semanal na 3. Saldo líquido por bloco, checado contra cortes (15/10/10, total 50).</div>
+        <div class="prf-form3"><div><label class="prf-lb">Bloco I</label><input class="prf-in" id="sI" type="number"></div><div><label class="prf-lb">Bloco II</label><input class="prf-in" id="sII" type="number"></div><div><label class="prf-lb">Bloco III</label><input class="prf-in" id="sIII" type="number"></div></div>
+        <button class="prf-btn" id="sAdd">Registrar simulado</button>
+        <div id="simList" style="margin-top:12px;"></div>
+      </div>
+    </div>
+
+    <div class="prf-panel" id="p-metodo">
+      <div class="prf-card prf-info">
+        <h3>Como este plano funciona</h3>
+        <p>Não existe técnica secreta de aprovação — existe alocação disciplinada das técnicas que funcionam. O plano organiza cinco delas em três fases, subindo a intensidade só quando o retorno justifica.</p>
+      </div>
+      <div class="prf-card prf-info">
+        <h3>NotebookLM no fluxo <span class="pin" style="background:var(--violet)">roxo</span></h3>
+        <div class="prf-m"><div class="mi" style="color:var(--violet)">↻</div><div><div class="mt">Revisão da manhã = Áudio Overview</div><div class="md">Ouça o resumo do que estudou na véspera; libera a manhã para questões.</div></div></div>
+        <div class="prf-m"><div class="mi" style="color:var(--violet)">?</div><div><div class="mt">Erro → explicação + 3 questões novas</div><div class="md">Treino direcionado ao seu ponto fraco real.</div></div></div>
+        <div class="prf-m"><div class="mi" style="color:var(--violet)">▤</div><div><div class="mt">Trânsito e leis = flashcards/quiz</div><div class="md">Memória ativa em vez de reler artigo de lei.</div></div></div>
+      </div>
+      <div class="prf-card prf-info">
+        <h3>Os 5 princípios</h3>
+        <div class="prf-m"><div class="mi">1</div><div><div class="mt">Questão desde o 1º assunto</div><div class="md">2 aulas → 15 questões antes de avançar.</div></div></div>
+        <div class="prf-m"><div class="mi">2</div><div><div class="mt">Treinar abstenção</div><div class="md">Errado −1, branco 0. Não marcar o que não sabe.</div></div></div>
+        <div class="prf-m"><div class="mi">3</div><div><div class="mt">Caderno de erros que revisa a pegadinha</div><div class="md">Cada erro vira revisão +2 dias.</div></div></div>
+        <div class="prf-m"><div class="mi">4</div><div><div class="mt">Cortar cauda longa</div><div class="md">Bloco III e Trânsito primeiro; cortar excesso de Info e RL.</div></div></div>
+        <div class="prf-m"><div class="mi">5</div><div><div class="mt">Espaçar, não reler</div><div class="md">+1/+7/+21/+45 dias em questões ou áudio.</div></div></div>
+      </div>
+      <div class="prf-card prf-info">
+        <h3>Uma verdade honesta</h3>
+        <p>Este sistema organiza, prioriza e mede — mas não estuda por você. A aprovação vem da soma <b>plano bom + execução diária sua</b>. Ele te mostra o caminho mais curto; caminhar é com você. E não confie só nesta ferramenta: mantenha seu curso, suas questões e, se precisar, gente de verdade ao redor.</p>
+      </div>
+    </div>
+
+    <div class="prf-panel" id="p-dados">
+      <div class="prf-card prf-info">
+        <h3>Backup dos seus dados <span class="pin">importante</span></h3>
+        <p>Seus dados ficam salvos <b>neste navegador/dispositivo</b>. Se trocar de aparelho ou limpar o navegador, some. Exporte de vez em quando (e antes de trocar de máquina) para não perder meses de histórico.</p>
+        <div style="display:flex;gap:10px;flex-wrap:wrap;margin-top:12px;">
+          <button class="prf-btn" id="expBtn">Exportar backup</button>
+          <label class="prf-btn nav" style="cursor:pointer;">Importar backup<input type="file" id="impFile" accept="application/json" style="display:none;"></label>
+        </div>
+        <div class="prf-note" id="dataMsg" style="display:none;"></div>
+        <div class="prf-note">Dica: exporte no fim de cada mês. O arquivo é pequeno e guarda tudo — progresso, questões, erros, redações e simulados.</div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<script>
+(function(){
+  const KEY='prf-v4-state';
+  const S=[
+    {id:'const',n:'Direito Constitucional',b:'III',w:7,p:16,aulas:62,cap:55},
+    {id:'adm',n:'Direito Administrativo',b:'III',w:7,p:14,aulas:71,cap:60},
+    {id:'penal',n:'Direito Penal e Proc. Penal',b:'III',w:9,p:5,aulas:208,cap:150},
+    {id:'trans',n:'Legislação de Trânsito',b:'II',w:30,p:7,aulas:150,cap:150},
+    {id:'port',n:'Língua Portuguesa',b:'I',w:12,p:11,aulas:90,cap:70},
+    {id:'info',n:'Informática',b:'I',w:8,p:4,aulas:279,cap:90},
+    {id:'rlm',n:'Raciocínio Lógico',b:'I',w:10,p:5,aulas:202,cap:100},
+    {id:'lesp',n:'Legislação Especial',b:'III',w:6,p:11,aulas:73,cap:65},
+    {id:'fis',n:'Física',b:'I',w:7,p:15,aulas:55,cap:50},
+    {id:'etica',n:'Ética e Cidadania',b:'I',w:7,p:17,aulas:48,cap:45},
+    {id:'dh',n:'Direitos Humanos',b:'III',w:6,p:18,aulas:44,cap:40},
+    {id:'ing',n:'Inglês',b:'I',w:5,p:9,aulas:55,cap:40},
+    {id:'geo',n:'Geopolítica',b:'I',w:6,p:50,aulas:16,cap:16},
+  ];
+  const byId=id=>S.find(x=>x.id===id);
+  const REV=[1,7,21,45];
+  const DIAS=['Dom','Seg','Ter','Qua','Qui','Sex','Sáb'];
+  const PHASES={
+    1:{name:'Fundação',hrs:14,when:'Agora → publicação do edital',goal:'Cobrir o núcleo do edital uma vez, com questões desde o início. Ritmo sustentável, sem burnout numa fase longa.',mix:['~2 aulas/dia','15 questões/sessão','redação quinzenal','simulado por bloco'],qPerNight:15,redFreq:'quinzenal'},
+    2:{name:'Aprofundamento',hrs:17,when:'Quando o edital sair',goal:'Você já viu a matéria. Acréscimo de horas vai 100% para questões e revisão, não aula nova. Volume de Cebraspe é o motor aqui.',mix:['1 aula/dia','25+ questões/sessão','redação semanal','simulado completo mensal'],qPerNight:25,redFreq:'semanal'},
+    3:{name:'Reta final',hrs:20,when:'~8 semanas antes da prova',goal:'Curto e decisivo. Simulado completo semanal, redação semanal, revisão pesada do caderno de erros. Pouca aula, muita prova.',mix:['revisão + questões','simulado completo semanal','redação semanal','caderno de erros diário'],qPerNight:35,redFreq:'semanal'}
+  };
+
+  let st={phase:1,lastSeen:{},prog:{},reviews:[],questions:[],errors:[],reds:[],sims:[],sessions:[]};
+  S.forEach(s=>{st.prog[s.id]=s.p;st.lastSeen[s.id]=null;});
+
+  const app=document.getElementById('prf');
+  const $=s=>app.querySelector(s),$$=s=>app.querySelectorAll(s);
+  const today=d=>(d||new Date()).toISOString().slice(0,10);
+  const addD=(ds,n)=>{const d=new Date(ds);d.setDate(d.getDate()+n);return today(d);};
+  const dBetween=(a,b)=>Math.round((new Date(b)-new Date(a))/864e5);
+
+  function load(){try{const r=localStorage.getItem(KEY);if(r)st=Object.assign(st,JSON.parse(r));}catch(e){}render();}
+  function save(){try{localStorage.setItem(KEY,JSON.stringify(st));}catch(e){}}
+
+  $$('.prf-tab').forEach(t=>t.addEventListener('click',()=>{$$('.prf-tab').forEach(x=>x.classList.remove('active'));$$('.prf-panel').forEach(x=>x.classList.remove('active'));t.classList.add('active');$('#p-'+t.dataset.t).classList.add('active');}));
+
+  const active=()=>S.filter(s=>['I','II','III'].includes(s.b));
+  function score(s){const prog=st.prog[s.id]??s.p;const atraso=(100-prog)/100;const ls=st.lastSeen[s.id];const dias=ls?Math.min(dBetween(ls,today()),14):7;return s.w*atraso*(1+dias/10)*(s.b==='II'?1.15:s.b==='III'?1.1:1);}
+  const focusSubject=()=>[...active()].sort((a,b)=>score(b)-score(a))[0];
+  function yesterdaySubject(){let best=null,bd=null;active().forEach(s=>{if(st.lastSeen[s.id]&&(!bd||st.lastSeen[s.id]>bd)){bd=st.lastSeen[s.id];best=s;}});return best||focusSubject();}
+  const P=()=>PHASES[st.phase];
+
+  function completeNight(id){st.lastSeen[id]=today();st.prog[id]=Math.min(100,(st.prog[id]??byId(id).p)+2);st.reviews.push({id,stage:0,due:addD(today(),REV[0]),kind:'rev'});save();render();}
+
+  // PHASE BAR
+  function renderPhaseBar(){
+    const b=$('#phaseBar');b.innerHTML='';
+    [1,2,3].forEach(i=>{const p=PHASES[i];b.innerHTML+=`<div class="prf-ph ${st.phase===i?'on':''}" data-ph="${i}"><div class="pn">Fase ${i} · ${p.name}</div><div class="pd">${p.hrs}h/sem</div></div>`;});
+    b.querySelectorAll('[data-ph]').forEach(el=>el.addEventListener('click',()=>{st.phase=+el.dataset.ph;save();render();}));
+  }
+  function renderPhases(){
+    const c=$('#phaseCards');c.innerHTML='';
+    [1,2,3].forEach(i=>{const p=PHASES[i];
+      c.innerHTML+=`<div class="prf-phase ${st.phase===i?'on':''}">
+        <div class="ph-h"><div class="ph-n">Fase ${i} — ${p.name}</div><div class="ph-hrs">${p.hrs}h/sem</div></div>
+        <div class="ph-when">${p.when}</div>
+        <div class="ph-goal">${p.goal}</div>
+        <div class="ph-mix">${p.mix.map(m=>`<span class="mixchip">${m}</span>`).join('')}</div>
+        <div style="margin-top:10px;"><button class="prf-btn sm ${st.phase===i?'':'ghost'}" data-setph="${i}">${st.phase===i?'Fase ativa':'Ativar esta fase'}</button></div>
+      </div>`;});
+    c.querySelectorAll('[data-setph]').forEach(el=>el.addEventListener('click',()=>{st.phase=+el.dataset.setph;save();render();}));
+  }
+
+  function renderHoje(){
+    const act=active();
+    const avg=Math.round(act.reduce((a,s)=>a+(st.prog[s.id]??s.p),0)/act.length);
+    const totalQ=st.questions.reduce((a,q)=>a+q.hit+q.miss,0);
+    const netQ=st.questions.reduce((a,q)=>a+q.hit-q.miss,0);
+    const dueRev=st.reviews.filter(r=>r.due<=today()).length;
+    $('#hojeStats').innerHTML=`
+      <div class="prf-stat v"><div class="n">F${st.phase}</div><div class="l">${P().name} · ${P().hrs}h</div></div>
+      <div class="prf-stat amber"><div class="n">${avg}%</div><div class="l">Média edital</div></div>
+      <div class="prf-stat ${netQ<0?'r':'g'}"><div class="n">${netQ>=0?'+':''}${netQ}</div><div class="l">Saldo líquido</div></div>
+      <div class="prf-stat ${dueRev?'r':''}"><div class="n">${dueRev}</div><div class="l">Revisões hoje</div></div>`;
+    const todaySecs=(st.sessions||[]).filter(s=>s.date===today()).reduce((a,s)=>a+s.secs,0);
+    const goalMinsH=P().hrs/7*60;const todayPctH=Math.min(100,todaySecs/60/goalMinsH*100);
+    $('#hojeStats').innerHTML+=`<div class="prf-stat ${todayPctH>=80?'g':todaySecs>0?'amber':''}"><div class="n">${todaySecs>=3600?Math.floor(todaySecs/3600)+'h'+String(Math.floor(todaySecs%3600/60)).padStart(2,'0'):Math.floor(todaySecs/60)+'min'}</div><div class="l">Tempo hoje</div></div>`;
+    const s=focusSubject();const prog=st.prog[s.id]??s.p;const q=P().qPerNight;
+    $('#nightPin').textContent=P().name;
+    $('#nightSub').innerHTML=`Foco de hoje por peso × atraso × tempo sem ver. Na Fase ${st.phase}, a meta é <b>${q} questões</b> por sessão.`;
+    const why=s.id==='penal'?'Maior buraco: peso alto no Bloco III e só ~'+prog+'% feito.':s.b==='II'?'30 itens num bloco só — maior densidade da prova.':prog<10?'Pouco avançada e com peso relevante.':'Rodízio para não esfriar.';
+    const aulaStep=st.phase===1?'<div class="prf-step"><span class="k">2 aulas</span><span>No seu 2.0–2.5x, anotando só pegadinhas.</span></div>':st.phase===2?'<div class="prf-step"><span class="k">1 aula</span><span>Só onde ainda há lacuna — o foco agora é questão.</span></div>':'<div class="prf-step"><span class="k">revisão</span><span>Sem aula nova: revise o resumo e parta pra questão.</span></div>';
+    $('#nightSess').innerHTML=`<div class="prf-sess"><div class="top"><div class="nm">${s.n}</div><span class="chip crit">foco de hoje</span></div><div class="why">${why} · ${prog}% · Bloco ${s.b}</div><div class="steps">${aulaStep}<div class="prf-step"><span class="k">${q} questões</span><span>Cebraspe do assunto. Em branco o que não tiver certeza — não chute.</span></div><div class="prf-step nlm"><span class="k">NotebookLM</span><span>Salve anotações como fonte; gere o Áudio Overview p/ amanhã.</span></div></div><div style="margin-top:9px;"><button class="prf-btn sm" data-done="${s.id}">Concluí o bloco da noite</button></div></div>`;
+    $('#nightSess').querySelector('[data-done]').addEventListener('click',e=>completeNight(e.target.dataset.done));
+    const y=yesterdaySubject();
+    let mh=`<div class="prf-sess" style="background:linear-gradient(135deg,#4b3fb0,#6C5CE7);"><div class="top"><div class="nm">${y.n}</div><span class="chip nlm">revisar amanhã</span></div><div class="why">Revisão do que estudou por último (~1h).</div><div class="steps"><div class="prf-step nlm"><span class="k">Ouça</span><span>Áudio Overview de ontem (10–15 min).</span></div><div class="prf-step"><span class="k">10 questões</span><span>Do assunto de ontem, para consolidar.</span></div></div></div>`;
+    const due=[...st.reviews].filter(r=>r.due<=today()).sort((a,b)=>a.due.localeCompare(b.due));
+    if(due.length){mh+=`<div style="font-size:11px;color:var(--mut);text-transform:uppercase;letter-spacing:.5px;font-weight:600;margin:4px 0 6px;">Também vencendo</div>`;
+      due.forEach(r=>{const idx=st.reviews.indexOf(r);const ss=byId(r.id);const isE=r.kind==='err';mh+=`<div class="prf-sess" style="background:var(--paper);color:var(--ink);"><div class="top"><div class="nm" style="color:var(--ink)">${ss?ss.n:r.id}</div>${isE?'<span class="chip crit">erro</span>':'<span class="chip rev">rev '+(r.stage+1)+'/4</span>'}</div><div class="why" style="color:var(--mut)">${isE?('Pegadinha: '+r.topic):'Refaça em questões.'}</div><div style="margin-top:7px;"><button class="prf-btn sm nav" data-rev="${idx}">Revisei</button></div></div>`;});}
+    $('#morningSess').innerHTML=mh;
+    $('#morningSess').querySelectorAll('[data-rev]').forEach(b=>b.addEventListener('click',()=>{const r=st.reviews[+b.dataset.rev];if(!r)return;if(r.kind==='err')st.reviews.splice(+b.dataset.rev,1);else if(r.stage+1<REV.length){r.stage++;r.due=addD(today(),REV[r.stage]);}else st.reviews.splice(+b.dataset.rev,1);save();render();}));
+  }
+
+  function renderSemana(){
+    const p=P();$('#weekHrsPin').textContent='Fase '+st.phase+' · '+p.hrs+'h';
+    const todd=new Date().getDay();const g=$('#weekGrid');g.innerHTML='';
+    const q=p.qPerNight;
+    let plan;
+    if(st.phase===1)plan={wd:{h:'~2h',am:'Revisão + questões',pm:'2 aulas + '+q+' questões'},sat:{h:'~3h',wk:'2h aula + 1h questões'},sun:{h:'~1h20',wk:'40min aula + revisão · redação quinzenal'}};
+    else if(st.phase===2)plan={wd:{h:'~2h30',am:'Revisão + questões',pm:'1 aula + '+q+' questões'},sat:{h:'~3h30',wk:'Simulado por bloco + questões'},sun:{h:'~2h',wk:'Revisão da semana · redação semanal'}};
+    else plan={wd:{h:'~3h',am:'Revisão + questões',pm:q+' questões + caderno de erros'},sat:{h:'~4h30',wk:'Simulado COMPLETO (120, 4h30)'},sun:{h:'~2h30',wk:'Correção do simulado · redação semanal'}};
+    for(let i=1;i<=5;i++)add(i,plan.wd);add(6,plan.sat);add(0,plan.sun);
+    function add(d,p){const isT=d===todd;let s='';if(p.am)s+=`<div class="prf-slot am"><b>Manhã · NotebookLM</b>${p.am}</div>`;if(p.pm)s+=`<div class="prf-slot pm"><b>Noite</b>${p.pm}</div>`;if(p.wk)s+=`<div class="prf-slot wk"><b>${d===0?'Domingo':'Sábado'}</b>${p.wk}</div>`;g.innerHTML+=`<div class="prf-day ${isT?'today':''}"><div class="dn">${DIAS[d]}</div><div class="dh">${p.h}${isT?' · hoje':''}</div>${s}</div>`;}
+    $('#weekNote').innerHTML=`<b>Fase ${st.phase} (${p.name}):</b> meta de ~${p.hrs}h/semana. ${p.goal}`;
+  }
+
+  function renderOrc(){
+    const l=$('#budList');l.innerHTML='';const maxA=Math.max(...S.map(s=>s.aulas));
+    [...S].sort((a,b)=>b.aulas-a.aulas).forEach(s=>{const pctBar=s.aulas/maxA*100,capPos=s.cap/maxA*100,over=s.aulas-s.cap;const bcls=s.b==='I'?'b1':s.b==='II'?'b2':'b3';const tag=over>40?'<span class="prf-bud-tag tag-cut">corte '+over+'</span>':(s.b==='II'||s.b==='III')&&over<=10?'<span class="prf-bud-tag tag-core">núcleo</span>':'<span class="prf-bud-tag tag-ok">ok</span>';const col=over>40?'var(--r)':s.b==='II'?'var(--g)':s.b==='III'?'#c96':'#9fb0c4';l.innerHTML+=`<div class="prf-bud"><div class="prf-bud-nm">${s.n} <span class="blk ${bcls}">B${s.b}</span></div><div class="prf-bud-n">${s.aulas} aulas</div>${tag}<div class="prf-bud-track"><div class="prf-bud-fill" style="width:${pctBar}%;background:${col}"></div><div class="prf-bud-cap" style="left:${capPos}%"></div></div></div>`;});
+  }
+
+  function fillSel(sel){sel.innerHTML=active().map(s=>`<option value="${s.id}">${s.n}</option>`).join('');}
+  function renderQuest(){fillSel($('#qSubj'));const h=$('#qHist');h.innerHTML='';if(!st.questions.length){h.innerHTML='<div class="prf-empty">Sem baterias. Comece hoje.</div>';return;}[...st.questions].reverse().forEach(q=>{const s=byId(q.subj);const net=q.hit-q.miss;h.innerHTML+=`<div class="prf-qrow"><div>${q.date.slice(5)} · ${s?s.n:q.subj}</div><div class="mono" style="color:var(--g)">${q.hit}</div><div class="mono" style="color:var(--r)">${q.miss}</div><div class="mono" style="color:${net<0?'var(--r)':'var(--g)'}">${net>=0?'+':''}${net}</div></div>`;});}
+  $('#qAdd').addEventListener('click',()=>{const subj=$('#qSubj').value,hit=parseInt($('#qHit').value),miss=parseInt($('#qMiss').value),blank=parseInt($('#qBlank').value)||0;if(isNaN(hit)||isNaN(miss)){alert('Preencha acertos e erros.');return;}st.questions.push({date:today(),subj,hit,miss,blank});const net=hit-miss,tot=hit+miss,acc=tot?Math.round(hit/tot*100):0;let m=net<0?`<b>Saldo negativo (${net}).</b> Na prova elimina. Reduza o chute.`:blank===0&&miss>0?`Zero em branco com ${miss} erros: teste abstenção nas duvidosas.`:acc>=80?`Bom líquido (+${net}, ${acc}%). Suba a dificuldade.`:`Líquido +${net}. Jogue as ${miss} erradas no caderno de erros.`;const fb=$('#qFb');fb.style.display='block';fb.innerHTML=m;fb.className='prf-note'+(net<0?' warn':'');$('#qHit').value='';$('#qMiss').value='';$('#qBlank').value='';save();render();});
+
+  function renderErros(){fillSel($('#eSubj'));const l=$('#errList');l.innerHTML='';if(!st.errors.length){l.innerHTML='<div class="prf-empty">Caderno vazio.</div>';return;}[...st.errors].reverse().forEach((e,ri)=>{const idx=st.errors.length-1-ri;const s=byId(e.subj);l.innerHTML+=`<div class="prf-err"><div class="et">${e.topic}</div><div class="em">${s?s.n:e.subj} — ${e.why}</div><div class="ed">${e.date} · <a href="#" data-del="${idx}" style="color:var(--r)">resolvido</a></div></div>`;});l.querySelectorAll('[data-del]').forEach(a=>a.addEventListener('click',ev=>{ev.preventDefault();st.errors.splice(+a.dataset.del,1);save();render();}));}
+  $('#eAdd').addEventListener('click',()=>{const subj=$('#eSubj').value,topic=$('#eTopic').value.trim(),why=$('#eWhy').value.trim();if(!topic||!why){alert('Preencha assunto e porquê.');return;}st.errors.push({date:today(),subj,topic,why});st.reviews.push({id:subj,kind:'err',topic,stage:0,due:addD(today(),2)});$('#eTopic').value='';$('#eWhy').value='';save();render();});
+
+  $('#rAdd').addEventListener('click',()=>{const t=$('#rTheme').value.trim(),sc=parseFloat($('#rScore').value);if(!t||isNaN(sc)){alert('Preencha tema e nota.');return;}st.reds.push({date:today(),theme:t,score:sc});$('#rTheme').value='';$('#rScore').value='';save();render();});
+  function renderRed(){const l=$('#redList');l.innerHTML='';if(!st.reds.length){l.innerHTML='<div class="prf-empty" style="text-align:left;padding:8px 0;">Nenhuma redação. Fase '+st.phase+': frequência '+P().redFreq+'.</div>';return;}[...st.reds].reverse().forEach(r=>{const ok=r.score>=10;l.innerHTML+=`<div class="prf-redo"><span class="rt">${r.date.slice(5)}</span><span style="flex:1">${r.theme}</span><span class="mono" style="color:${ok?'var(--g)':'var(--r)'}">${r.score}/20 ${ok?'✓':'✗'}</span></div>`;});}
+
+  $('#sAdd').addEventListener('click',()=>{const i=parseFloat($('#sI').value),ii=parseFloat($('#sII').value),iii=parseFloat($('#sIII').value);if(isNaN(i)||isNaN(ii)||isNaN(iii)){alert('Preencha os três blocos.');return;}st.sims.push({date:today(),i,ii,iii});$('#sI').value='';$('#sII').value='';$('#sIII').value='';save();render();});
+  function renderSim(){const l=$('#simList');l.innerHTML='';if(!st.sims.length){l.innerHTML='<div class="prf-empty" style="text-align:left;padding:8px 0;">Nenhum simulado ainda.</div>';return;}[...st.sims].reverse().forEach(s=>{const tot=s.i+s.ii+s.iii;const pass=s.i>=15&&s.ii>=10&&s.iii>=10&&tot>=50;l.innerHTML+=`<div class="prf-redo"><span class="rt">${s.date.slice(5)}</span><span style="flex:1">I:${s.i} · II:${s.ii} · III:${s.iii}</span><span class="mono" style="color:${pass?'var(--g)':'var(--r)'}">${tot} ${pass?'APROV':'ELIM'}</span></div>`;});}
+
+  // TIMER
+  let tmInterval=null,tmElapsed=0,tmRunning=false,tmPaused=false;
+  const TYPES={aula:'Aula',questoes:'Questões',revisao:'Revisão',simulado:'Simulado',redacao:'Redação'};
+  function fmtDur(s){const h=Math.floor(s/3600),m=Math.floor(s%3600/60),ss=s%60;return h?`${h}:${String(m).padStart(2,'0')}:${String(ss).padStart(2,'0')}`:`${String(m).padStart(2,'0')}:${String(ss).padStart(2,'0')}`;}
+  function fmtShort(s){const h=Math.floor(s/3600),m=Math.floor(s%3600/60);return h?`${h}h${m?String(m).padStart(2,'0')+'min':''}`:`${m}min`;}
+  function tmTick(){tmElapsed++;$('#tmClock').textContent=(tmElapsed>=3600?Math.floor(tmElapsed/3600)+':':'')+String(Math.floor(tmElapsed%3600/60)).padStart(2,'0')+':'+String(tmElapsed%60).padStart(2,'0');}
+  function initTimerSelects(){fillSel($('#tmSubj'));fillSel($('#tmMSubj'));}
+
+  $('#tmStart').addEventListener('click',()=>{
+    if(!$('#tmSubj').value){alert('Selecione a matéria.');return;}
+    tmRunning=true;tmPaused=false;tmElapsed=0;
+    tmInterval=setInterval(tmTick,1000);
+    $('#tmClock').className='prf-timer-clock running';
+    $('#tmLabel').textContent=$('#tmSubj').options[$('#tmSubj').selectedIndex].text+' · '+TYPES[$('#tmType').value];
+    $('#tmStart').style.display='none';$('#tmPause').style.display='';$('#tmFinish').style.display='';$('#tmCancel').style.display='';
+    $('#tmSubj').disabled=true;$('#tmType').disabled=true;
+  });
+  $('#tmPause').addEventListener('click',()=>{
+    if(tmPaused){tmInterval=setInterval(tmTick,1000);tmPaused=false;$('#tmPause').textContent='Pausar';$('#tmClock').className='prf-timer-clock running';}
+    else{clearInterval(tmInterval);tmPaused=true;$('#tmPause').textContent='Retomar';$('#tmClock').className='prf-timer-clock paused';}
+  });
+  $('#tmFinish').addEventListener('click',()=>{
+    if(tmElapsed<30){if(!confirm('Sessão com menos de 30s. Registrar mesmo assim?'))return;}
+    clearInterval(tmInterval);
+    if(!st.sessions)st.sessions=[];
+    st.sessions.push({date:today(),subj:$('#tmSubj').value,type:$('#tmType').value,secs:tmElapsed});
+    save();tmResetUI();renderTimer();
+  });
+  $('#tmCancel').addEventListener('click',()=>{clearInterval(tmInterval);tmResetUI();});
+  function tmResetUI(){
+    tmRunning=false;tmPaused=false;tmElapsed=0;tmInterval=null;
+    $('#tmClock').textContent='00:00:00';$('#tmClock').className='prf-timer-clock';
+    $('#tmLabel').textContent='Pronto para iniciar';
+    $('#tmStart').style.display='';$('#tmPause').style.display='none';$('#tmPause').textContent='Pausar';
+    $('#tmFinish').style.display='none';$('#tmCancel').style.display='none';
+    $('#tmSubj').disabled=false;$('#tmType').disabled=false;
+  }
+  $('#tmManualToggle').addEventListener('click',e=>{e.preventDefault();$('#tmManual').classList.toggle('open');});
+  $('#tmMAdd').addEventListener('click',()=>{
+    const mins=parseInt($('#tmMMins').value);if(!mins||mins<1){alert('Preencha os minutos.');return;}
+    if(!st.sessions)st.sessions=[];
+    st.sessions.push({date:today(),subj:$('#tmMSubj').value,type:$('#tmMType').value,secs:mins*60});
+    $('#tmMMins').value='';save();renderTimer();
+  });
+  function renderTimer(){
+    if(!st.sessions)st.sessions=[];
+    initTimerSelects();
+    $('#timerPhasePin').textContent='Fase '+st.phase;
+    const td=today();
+    const todaySess=st.sessions.filter(s=>s.date===td);
+    const list=$('#tmTodayList');
+    if(!todaySess.length){list.innerHTML='<div class="prf-empty">Nenhuma sessão hoje. Bora estudar!</div>';}
+    else{list.innerHTML='';todaySess.forEach((s,i)=>{
+      const idx=st.sessions.indexOf(s);const sub=byId(s.subj);
+      list.innerHTML+=`<div class="prf-timer-srow"><div>${sub?sub.n:s.subj}</div><div>${TYPES[s.type]||s.type}</div><div class="mono">${fmtDur(s.secs)}</div><div class="del" data-tmdel="${idx}">✕</div></div>`;
+    });list.querySelectorAll('[data-tmdel]').forEach(a=>a.addEventListener('click',()=>{st.sessions.splice(+a.dataset.tmdel,1);save();renderTimer();}));}
+    const totalSecs=todaySess.reduce((a,s)=>a+s.secs,0);
+    $('#tmTodayTotal').textContent=fmtDur(totalSecs);
+    const goalMins=P().hrs/7*60;const pct=Math.min(100,totalSecs/60/goalMins*100);
+    $('#tmBar').style.width=pct+'%';$('#tmBar').style.background=pct>=100?'var(--g)':pct>=50?'var(--amber)':'var(--line)';
+    $('#tmBarLabel').textContent=fmtShort(totalSecs)+' de ~'+Math.round(goalMins)+'min/dia (meta fase '+st.phase+')';
+    const ws=$('#tmWeekSummary');
+    const last7=[];for(let i=6;i>=0;i--){const d=new Date();d.setDate(d.getDate()-i);last7.push(today(d));}
+    let whtml='<div style="display:grid;grid-template-columns:repeat(7,1fr);gap:6px;text-align:center;">';
+    last7.forEach(d=>{
+      const ds=st.sessions.filter(s=>s.date===d);const tot=ds.reduce((a,s)=>a+s.secs,0);
+      const hPct=Math.min(100,tot/60/goalMins*100);
+      const dayName=DIAS[new Date(d+'T12:00:00').getDay()];const isToday=d===td;
+      whtml+=`<div style="font-size:10px;"><div style="font-family:'Barlow Condensed',sans-serif;font-weight:700;font-size:12px;color:${isToday?'var(--nav)':'var(--mut)'};text-transform:uppercase;">${dayName}</div><div style="height:60px;display:flex;align-items:flex-end;justify-content:center;"><div style="width:100%;max-width:28px;height:${Math.max(3,hPct)}%;background:${hPct>=80?'var(--g)':hPct>0?'var(--amber)':'var(--line)'};border-radius:4px 4px 0 0;transition:height .3s;"></div></div><div class="mono" style="font-size:10px;color:var(--mut);margin-top:3px;">${tot?fmtShort(tot):'—'}</div></div>`;
+    });
+    whtml+='</div>';
+    const weekTotal=st.sessions.filter(s=>last7.includes(s.date)).reduce((a,s)=>a+s.secs,0);
+    whtml+=`<div class="prf-timer-today-total" style="margin-top:10px;"><span class="tl">Total 7 dias</span><span class="tv">${fmtShort(weekTotal)}</span></div>`;
+    ws.innerHTML=whtml;
+  }
+
+  // BACKUP
+  $('#expBtn').addEventListener('click',()=>{
+    const blob=new Blob([JSON.stringify(st,null,2)],{type:'application/json'});
+    const url=URL.createObjectURL(blob);const a=document.createElement('a');
+    a.href=url;a.download='backup-prf-'+today()+'.json';a.click();URL.revokeObjectURL(url);
+    const m=$('#dataMsg');m.style.display='block';m.className='prf-note';m.innerHTML='Backup exportado: <b>backup-prf-'+today()+'.json</b>. Guarde num lugar seguro (nuvem, e-mail).';
+  });
+  $('#impFile').addEventListener('change',e=>{
+    const f=e.target.files[0];if(!f)return;const rd=new FileReader();
+    rd.onload=()=>{try{const d=JSON.parse(rd.result);st=Object.assign(st,d);save();render();const m=$('#dataMsg');m.style.display='block';m.className='prf-note';m.innerHTML='Backup importado com sucesso. Dados restaurados.';}catch(err){const m=$('#dataMsg');m.style.display='block';m.className='prf-note warn';m.innerHTML='Arquivo inválido. Selecione um backup exportado por este sistema.';}};
+    rd.readAsText(f);
+  });
+
+  function render(){renderPhaseBar();renderPhases();renderHoje();renderSemana();renderOrc();renderQuest();renderErros();renderRed();renderSim();renderTimer();}
+  load();
+})();
+</script>
